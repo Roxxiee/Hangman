@@ -12,9 +12,16 @@
 #define RED     "\e[0;31m"
 #define GREEN   "\e[0;32m"
 #define YELLOW  "\e[0;33m"
-#define CYAN    "\e[0;106m"
+#define CYAN    "\e[0;106m"  //High Intensity backgrounds
 #define WHITE   "\e[0;37m"
+#define PURPLE  "\e[1;35m"
 
+#define MAGENTA "\e[1;35m"
+#define LIME    "\e[1;32m"
+#define GOLD    "\e[1;33m"
+#define PINK    "\e[1;95m"
+#define ORANGE  "\e[38;5;208m"
+#define BOLD_WHITE "\e[1;37m"
 
 void draw(int left){
     printf("\n--- HANGMAN ---\n\n");
@@ -47,52 +54,102 @@ void start(){
     char letter;
     int optiune;
     char rep[WORD]="";
+    int limba, dificultate;
 
-    printf("1. Joci cu un prieten\n2. Joci cu calculatorul\nAlege: ");
-    scanf("%d", &optiune);
+    srand(time(NULL));
 
-    if (optiune == 1) {
-        printf("Jucator 1, scrie cuvantul: ");
-        while (getchar() != '\n');
-        fgets(secret, sizeof(secret), stdin);
-        secret[strcspn(secret,"\n")]=0;
+    // 1. INTRO
+    system("cls");
+    printf(GOLD "=============================================\n");
+    printf("     Welcome to the ultimate challenge...    \n");
+    printf("                                             \n");
+    printf(RED  "           H A N G M A N    G A M E          \n");
+    printf(GOLD "                                             \n");
+    printf("=============================================\n" RESET);
+    
+    printf(BOLD_WHITE "\n   Ready to save your character?\n" RESET);
+    printf("\n   >>>Press [ENTER] to start...");
+    
+    while (getchar() != '\n'); 
+    getchar(); 
+    system("cls");
+
+    // 2. SELECTARE LIMBA
+    printf(PINK "=================================\n");
+    printf("   SELECT YOUR LANGUAGE / LIMBA  \n");
+    printf("=================================\n" RESET);
+    printf("\n     1. ROMANA\n     2. ENGLISH\n\n");
+    printf(BOLD_WHITE "Alegere: " RESET);
+    scanf("%d", &limba);
+    system("cls");
+
+    // 3. SELECTIE MOD SI DIFICULTATE 
+    if (limba == 1) { // ROMANA
+        printf(MAGENTA "=== MOD DE JOC ===\n\n" RESET);
+        printf("     1. SOLO MODE (Contra calculatorului)\n");
+        printf("     2. MULTIPLAYER (Cu un prieten)\n");
+        printf("\nAlege: ");
+        scanf("%d", &optiune);
         system("cls");
-    } else {
-        int limba, dificultate;
-        printf("Alege limba\n   1. Romana\n   2. Engleza\n"); scanf("%d", &limba);
-        printf("Alege dificultatea\n   1. Usor\n   2. Mediu\n   3. Greu\n" ); scanf("%d", &dificultate);
-        
-        srand(time(NULL));
 
+        if (optiune == 1) {
+            printf(LIME "=== DIFICULTATE ===\n\n" RESET);
+            printf("     1. Usor\n     2. Mediu\n     3. Greu\n\nAlege: ");
+            scanf("%d", &dificultate);
+        } else {
+            printf(BOLD_WHITE "Jucator 1, scrie cuvantul: " RESET);
+            scanf("%s", secret); 
+        }
+    } 
+    else { // ENGLISH 
+        printf(MAGENTA "=== GAME MODE ===\n" RESET);
+        printf("\n     1. SOLO MODE (Vs Computer)\n");
+        printf("     2. MULTIPLAYER (Vs Friend)\n");
+        printf("\nChoice: ");
+        scanf("%d", &optiune);
+        system("cls");
+
+        if (optiune == 1) {
+            printf(LIME "=== DIFFICULTY ===\n" RESET);
+            printf("\n     1. Easy\n     2. Medium\n     3. Hard\n\nChoice: ");
+            scanf("%d", &dificultate);
+        } else {
+            printf(BOLD_WHITE "Player 1, type the secret word: " RESET);
+            scanf("%s", secret);
+        }
+    }
+
+    // 4. SOLO MODE
+    if (optiune == 1) {
         if (limba == 1) { // Romana
-                if (dificultate == 1) {
-                        char cuvinte[][WORD] = {"MERE", "CASA", "MAMA", "SCOALA", "CERUL", "LUNA", "PADURE", "FOCUL", "IARNA", "VARA", "SOARE", "CARTE", "LAPTE", "PAINE", "MASA", "BANAT", "IARBA", "MUNTE", "FLOARE", "PESTE", "CANAL", "VANT", "NORI", "STELE"};
-                        strcpy(secret, cuvinte[rand() % 24]);
-                } else if (dificultate == 2) {
-                        char cuvinte[][WORD] = {"AUTOMOBIL", "TELEVIZOR", "DICTIONAR", "CANTAR", "TASTATURA", "TELEFON", "FERESTRA", "ALBASTRU", "GRADINA", "POVESTE", "ORIZONT", "SARBATOARE", "VACANTA", "BUCATARIE", "CALATORIE", "BIROU", "Ochelari", "BILETASE", "FRIGIDER", "ZAPADA", "CULOARE", "UNIVERS", "AVION"};
-                        strcpy(secret, cuvinte[rand() % 23]);
-                } else {
-                        char cuvinte[][WORD] = {"INCONSTITUTIONAL", "XILOFON", "STERNOCLEIDOMASTOIDIAN","ELECTROCARDIOGRAMA", "PARALELIPIPED", "ARHITECTURA", "DEZMEMBRAMANT", "ENCICLOPEDIE", "METAMORFOZA", "HIPOPOTAM", "SINCRONIZARE", "VULNERABILITATE", "EXTRATERESTRU", "INFRASTRUCTURA", "CONSOLIDARE", "TRANSFORMARE", "DETERMINARE", "PROEMINENTA", "INDESCRIPTIBIL"};
-                        strcpy(secret, cuvinte[rand() % 19]);
-                }
+            if (dificultate == 1) { 
+                char cuvinte[][WORD] = {"MAMA", "TATA", "CASA", "MASA", "SCOALA", "VACANTA", "BANANA", "ALBINA", "LALEA", "SOARE", "IARNA", "VARA", "MERE", "CARTE", "TELEFON", "GRADINA", "POVESTE", "LAPTE", "PAINE", "CAFEA"};
+                strcpy(secret, cuvinte[rand() % 20]);
+            } else if (dificultate == 2) { 
+                char cuvinte[][WORD] = {"ORIZONT", "BIROU", "AVION", "MUNTE", "FLOARE", "PADURE", "STELA", "VANT", "NORI", "CULOARE", "UNIVERS", "ZAPADA", "FRIGIDER", "OCHELARI", "TASTATURA", "CANTAR", "FERESTRA", "DICTIONAR", "PLANETA", "RUCHET"};
+                strcpy(secret, cuvinte[rand() % 20]);
+            } else { 
+                char cuvinte[][WORD] = {"XILOFON", "FOCUL", "AXA", "VREJ", "STERNOCLEIDOMASTOIDIAN", "INCONSTITUTIONAL", "PARALELIPIPED", "METAMORFOZA", "HIPOPOTAM", "VULNERABILITATE", "INFRASTRUCTURA", "ENCICLOPEDIE", "SNC", "DEZMEMBRAMANT", "JAZZ", "FALX", "BOX", "OXID", "CHIRURG", "SFINX"};
+                strcpy(secret, cuvinte[rand() % 20]);
+            }
         } else { // Engleza
-                if (dificultate == 1) {
-                        char cuvinte[][WORD] = {"APPLE", "HOME", "SCHOOL", "CAT", "BIRD", "FISH", "GREEN", "BREAD", "SMILE", "WATER", "NIGHT", "LIGHT", "STORM", "CLOUD", "PHONE", "CHAIR", "TABLE", "GRASS", "FRUIT", "SHIRT", "DREAM", "SPACE", "HEART", "PIZZA" };
-                        strcpy(secret, cuvinte[rand() % 24]);
-                } else if (dificultate == 2) {
-                        char cuvinte[][WORD] = {"MOUNTAIN", "KEYBOARD", "COMPUTER", "JOURNEY", "UNIVERSE", "EXPLORE", "VAMPIRE", "PYRAMID", "WHISPER", "FREEDOM", "HISTORY", "GALAXY", "AIRPORT", "WEATHER", "KITCHEN", "MORNING", "SILENCE", "BRAVERY", "BOTTLE", "PICTURE", "WINDOW", "GARDEN", "YELLOW", "BICYCLE"};
-                        strcpy(secret, cuvinte[rand() % 24]);
-                } else {
-                        char cuvinte[][WORD] = {"THOROUGHLY", "QUEUE", "PNEUMONIA", "PSYCHOLOGY", "REFRIGERATOR", "ASTRONOMY", "CHAMPAGNE", "KNOWLEDGE", "RESTAURANT", "PHILOSOPHY", "AMBIGUOUS", "CHALLENGE", "LITERATURE", "EXPERIMENT", "MYSTERIOUS", "SOPHISTICATED", "BEAUTIFUL", "DANGEROUS", "CELEBRATION", "IMPOSSIBLE"};
-                        strcpy(secret, cuvinte[rand() % 20]);
-                }
-        } system("cls");
+            if (dificultate == 1) {
+                char cuvinte[][WORD] = {"APPLE", "BANANA", "SCHOOL", "HOME", "SMILE", "PIZZA", "COFFEE", "YELLOW", "SUMMER", "WINTER", "FLOWER", "GARDEN", "WINDOW", "BOTTLE", "ORANGE", "KITTEN", "PLAYER", "STREET", "HAMMER", "SPOON"};
+                strcpy(secret, cuvinte[rand() % 20]);
+            } else if (dificultate == 2) {
+                char cuvinte[][WORD] = {"MOUNTAIN", "JOURNEY", "UNIVERSE", "EXPLORE", "HISTORY", "GALAXY", "WEATHER", "KITCHEN", "SILENCE", "BRAVERY", "BICYCLE", "KEYBOARD", "MORNING", "PICTURE", "BOTTLE", "YELLOW", "COMPUTER", "ASTRONOMY", "RESTAURANT", "DANGEROUS"};
+                strcpy(secret, cuvinte[rand() % 20]);
+            } else {
+                char cuvinte[][WORD] = {"QUEUE", "PNEUMONIA", "THOROUGHLY", "PSYCHOLOGY", "AMBIGUOUS", "SOPHISTICATED", "MYSTERIOUS", "CHALLENGE", "PHILOSOPHY", "CHAMPAGNE", "LYNX", "RHYTHM", "VORTEX", "UNKNOWN", "WRIGHT", "GNOME", "PHARAOH", "SUBTLE", "SYNDROME", "BUREAU"};
+                strcpy(secret, cuvinte[rand() % 20]);
+            }
+        }
     }
 
 
-    for(int i=0; secret[i]!='\0' ;i++){
-        secret[i]=toupper(secret[i]);
-    }    
+for(int i=0; secret[i]!='\0'; i++){
+    secret[i]=toupper(secret[i]);
+}    
 
 int len = strlen(secret);
 for (int i = 0; i < len; i++) {
@@ -104,15 +161,15 @@ for (int i = 0; i < len; i++) {
 }
 progres[len] = '\0';
 
+    //7. Jocul
     while(mistake < TRIES && strcmp(secret, progres) != 0){
         system("cls");
-        printf(CYAN "=== HANGMAN ===\n" RESET);
 
         printf(RED);
         draw(TRIES - mistake);
         printf(RESET);
 
-        printf("Cuvant: " CYAN "%s" RESET "\n", progres);
+        printf("Cuvant: " PURPLE  "%s" RESET "\n", progres);
 
         printf("Vieti: ");
         for(int i = 0; i < (TRIES - mistake); i++){
@@ -172,12 +229,12 @@ progres[len] = '\0';
         draw(TRIES - mistake); 
         printf(RESET);
 
-        printf("\nAi ghicit: " CYAN "%s" RESET "\n", secret);
+        printf("\nAi ghicit: " PURPLE "%s" RESET "\n", secret);
     } else {
         printf(RED "===============================\n");
         printf("    GAME OVER! Te-a prins!\n");
         printf(RED "===============================\n" RESET);
-        printf("\nCuvantul era: " CYAN "%s" RESET "\n", secret);
+        printf("\nCuvantul era: " PURPLE "%s" RESET "\n", secret);
 }
 
 printf("\nApasa ENTER pentru a continua...");
