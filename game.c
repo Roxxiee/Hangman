@@ -21,7 +21,12 @@
 #define GOLD    "\e[1;33m"
 #define PINK    "\e[1;95m"
 #define ORANGE  "\e[38;5;208m"
-#define BOLD_WHITE "\e[1;37m"
+#define BOLD_WHITE "\e[1;37m"  
+
+//Fundal colorat cu text negru 
+#define BG_ROZ       "\e[30;105m"  
+#define BG_TURCOAZ   "\e[30;106m"  
+#define BG_ALB       "\e[30;107m"
 
 void draw(int left){
     printf("\n--- HANGMAN ---\n\n");
@@ -58,34 +63,80 @@ void start(){
 
     srand(time(NULL));
 
-    // 1. INTRO
+    int theme = 0;
+
+    // 0. MENIUL DE SELECTIE CULOARE
     system("cls");
-    printf(GOLD "=============================================\n");
-    printf("     Welcome to the ultimate challenge...    \n");
-    printf("                                             \n");
-    printf(RED  "           H A N G M A N    G A M E          \n");
-    printf(GOLD "                                             \n");
-    printf("=============================================\n" RESET);
+    printf("=========================================\n");
+    printf("       CHOOSE GAME COLOR / ALEGE CULOARE \n");
+    printf("=========================================\n");
+    printf("  0. Default Terminal (Negru)\n");
+    printf("  1. Pink Mode (Fundal Roz)\n");
+    printf("  2. Cyan Mode (Fundal Turcoaz)\n");
+    printf("  3. Light Mode (Fundal Alb)\n\n");
+    printf("Alegere: ");
+    scanf("%d", &theme);
+
+    system("cls");
+
+    // Fundalul ales
+    if (theme == 1)       printf(BG_ROZ);
+    else if (theme == 2)  printf(BG_TURCOAZ);
+    else if (theme == 3)  printf(BG_ALB);
+    else                  printf(RESET);
+
+    system("cls"); 
+
+    // 1. INTRO 
+    printf(RED);
+    printf(" _    _                    _                                \n");
+    printf("| |  | |                  | |                               \n");
+    printf("| |__| | __ _ _ __   __ _ | |__ ___   __ _ _ __             \n");
+    printf("|  __  |/ _` | '_ \\ / _` || '_ ` _ \\ / _` | '_ \\            \n");
+    printf("| |  | | (_| | | | | (_| || | | | | | (_| | | | |           \n");
+    printf("|_|  |_|\\__,_|_| |_|\\__, ||_| |_| |_|\\__,_|_| |_|           \n");
+    printf("                     __/ |                                  \n");
+    printf("                    |___/                                   \n");
     
-    printf(BOLD_WHITE "\n   Ready to save your character?\n" RESET);
-    printf("\n   >>>Press [ENTER] to start...");
+    // Revenim la textul temei (daca e fundal deschis, textul ramane negru)
+    if (theme == 1)      printf(BG_ROZ);
+    else if (theme == 2) printf(BG_TURCOAZ);
+    else if (theme == 3) printf(BG_ALB);
+    else                 printf(RESET);
+
+    printf(GOLD "\n=========================================================\n");
+    printf("          Welcome to the ultimate challenge...           \n");
+    printf("=========================================================\n");
+    
+    if (theme == 0) printf(BOLD_WHITE "\n   Ready to save your character?\n" RESET);
+    else            printf("\n   Ready to save your character?\n");
+    
+    printf("\n   >>> Press [ENTER] to start...");
     
     while (getchar() != '\n'); 
     getchar(); 
     system("cls");
 
     // 2. SELECTARE LIMBA
-    printf(PINK "=================================\n");
-    printf("   SELECT YOUR LANGUAGE / LIMBA  \n");
-    printf("=================================\n" RESET);
+    if (theme == 0) printf(PINK);
+    printf("=========================================================\n");
+    printf("              SELECT YOUR LANGUAGE / LIMBA               \n");
+    printf("=========================================================\n");
+    if (theme == 0) printf(RESET);
+
     printf("\n     1. ROMANA\n     2. ENGLISH\n\n");
-    printf(BOLD_WHITE "Alegere: " RESET);
+    
+    if (theme == 0) printf(BOLD_WHITE "Alegere: " RESET);
+    else            printf("Alegere: ");
+    
     scanf("%d", &limba);
     system("cls");
 
     // 3. SELECTIE MOD SI DIFICULTATE 
     if (limba == 1) { // ROMANA
-        printf(MAGENTA "=== MOD DE JOC ===\n\n" RESET);
+        if (theme == 0) printf(MAGENTA "=== MOD DE JOC ===\n\n" RESET);
+        else            printf("=== MOD DE JOC ===\n\n");
+        
         printf("     1. SOLO MODE (Contra calculatorului)\n");
         printf("     2. MULTIPLAYER (Cu un prieten)\n");
         printf("\nAlege: ");
@@ -93,16 +144,22 @@ void start(){
         system("cls");
 
         if (optiune == 1) {
-            printf(LIME "=== DIFICULTATE ===\n\n" RESET);
+            if (theme == 0) printf(LIME "=== DIFICULTATE ===\n\n" RESET);
+            else            printf("=== DIFICULTATE ===\n\n");
             printf("     1. Usor\n     2. Mediu\n     3. Greu\n\nAlege: ");
             scanf("%d", &dificultate);
         } else {
-            printf(BOLD_WHITE "Jucator 1, scrie cuvantul: " RESET);
-            scanf("%s", secret); 
+            if (theme == 0) printf(BOLD_WHITE "Jucator 1, scrie cuvantul: " RESET);
+            else            printf("Jucator 1, scrie cuvantul: ");
+            while(getchar() != '\n');
+
+            fgets(secret, sizeof(secret), stdin);
+            secret[strcspn(secret, "\n")] = '\0';
         }
     } 
     else { // ENGLISH 
-        printf(MAGENTA "=== GAME MODE ===\n" RESET);
+        if (theme == 0) printf(MAGENTA "=== GAME MODE ===\n" RESET);
+        else            printf("=== GAME MODE ===\n");
         printf("\n     1. SOLO MODE (Vs Computer)\n");
         printf("     2. MULTIPLAYER (Vs Friend)\n");
         printf("\nChoice: ");
@@ -110,84 +167,148 @@ void start(){
         system("cls");
 
         if (optiune == 1) {
-            printf(LIME "=== DIFFICULTY ===\n" RESET);
+            if (theme == 0) printf(LIME "=== DIFFICULTY ===\n" RESET);
+            else            printf("=== DIFFICULTY ===\n");
             printf("\n     1. Easy\n     2. Medium\n     3. Hard\n\nChoice: ");
             scanf("%d", &dificultate);
         } else {
-            printf(BOLD_WHITE "Player 1, type the secret word: " RESET);
-            scanf("%s", secret);
+            if (theme == 0) printf(BOLD_WHITE "Player 1, type the secret word: " RESET);
+            else            printf("Player 1, type the secret word: ");
+            while(getchar() != '\n');
+
+            fgets(secret, sizeof(secret), stdin);
+            secret[strcspn(secret, "\n")] = '\0';
         }
     }
 
-    // 4. SOLO MODE
+    // 4. SOLO MODE (Citire din fisier text)
     if (optiune == 1) {
+        char cale_fisier[50];
+
         if (limba == 1) { // Romana
-            if (dificultate == 1) { 
-                char cuvinte[][WORD] = {"MAMA", "TATA", "CASA", "MASA", "SCOALA", "VACANTA", "BANANA", "ALBINA", "LALEA", "SOARE", "IARNA", "VARA", "MERE", "CARTE", "TELEFON", "GRADINA", "POVESTE", "LAPTE", "PAINE", "CAFEA"};
-                strcpy(secret, cuvinte[rand() % 20]);
-            } else if (dificultate == 2) { 
-                char cuvinte[][WORD] = {"ORIZONT", "BIROU", "AVION", "MUNTE", "FLOARE", "PADURE", "STELA", "VANT", "NORI", "CULOARE", "UNIVERS", "ZAPADA", "FRIGIDER", "OCHELARI", "TASTATURA", "CANTAR", "FERESTRA", "DICTIONAR", "PLANETA", "RUCHET"};
-                strcpy(secret, cuvinte[rand() % 20]);
-            } else { 
-                char cuvinte[][WORD] = {"XILOFON", "FOCUL", "AXA", "VREJ", "STERNOCLEIDOMASTOIDIAN", "INCONSTITUTIONAL", "PARALELIPIPED", "METAMORFOZA", "HIPOPOTAM", "VULNERABILITATE", "INFRASTRUCTURA", "ENCICLOPEDIE", "SNC", "DEZMEMBRAMANT", "JAZZ", "FALX", "BOX", "OXID", "CHIRURG", "SFINX"};
-                strcpy(secret, cuvinte[rand() % 20]);
-            }
+            if (dificultate == 1)      strcpy(cale_fisier, "words/ro_usor.txt");
+            else if (dificultate == 2) strcpy(cale_fisier, "words/ro_mediu.txt");
+            else                       strcpy(cale_fisier, "words/ro_greu.txt");
         } else { // Engleza
-            if (dificultate == 1) {
-                char cuvinte[][WORD] = {"APPLE", "BANANA", "SCHOOL", "HOME", "SMILE", "PIZZA", "COFFEE", "YELLOW", "SUMMER", "WINTER", "FLOWER", "GARDEN", "WINDOW", "BOTTLE", "ORANGE", "KITTEN", "PLAYER", "STREET", "HAMMER", "SPOON"};
-                strcpy(secret, cuvinte[rand() % 20]);
-            } else if (dificultate == 2) {
-                char cuvinte[][WORD] = {"MOUNTAIN", "JOURNEY", "UNIVERSE", "EXPLORE", "HISTORY", "GALAXY", "WEATHER", "KITCHEN", "SILENCE", "BRAVERY", "BICYCLE", "KEYBOARD", "MORNING", "PICTURE", "BOTTLE", "YELLOW", "COMPUTER", "ASTRONOMY", "RESTAURANT", "DANGEROUS"};
-                strcpy(secret, cuvinte[rand() % 20]);
-            } else {
-                char cuvinte[][WORD] = {"QUEUE", "PNEUMONIA", "THOROUGHLY", "PSYCHOLOGY", "AMBIGUOUS", "SOPHISTICATED", "MYSTERIOUS", "CHALLENGE", "PHILOSOPHY", "CHAMPAGNE", "LYNX", "RHYTHM", "VORTEX", "UNKNOWN", "WRIGHT", "GNOME", "PHARAOH", "SUBTLE", "SYNDROME", "BUREAU"};
-                strcpy(secret, cuvinte[rand() % 20]);
+            if (dificultate == 1)      strcpy(cale_fisier, "words/eng_easy.txt");
+            else if (dificultate == 2) strcpy(cale_fisier, "words/eng_medium.txt");
+            else                       strcpy(cale_fisier, "words/eng_hard.txt");
+        }
+
+        FILE *f = fopen(cale_fisier, "r");
+        if (f == NULL) {
+            printf(RED "EROARE: Nu am putut deschide fisierul de cuvinte %s!\n" RESET, cale_fisier);
+            return; 
+        }
+
+        int linie_aleasa = rand() % 20;
+        
+        for (int i = 0; i <= linie_aleasa; i++) {
+            if(fgets(secret, sizeof(secret), f)==NULL){
+                break;
+            }
+        }
+                
+        fclose(f); 
+
+        for (int i = 0; secret[i] != '\0'; i++) {
+            if (secret[i] == '\n' || secret[i] == '\r') {
+                secret[i] = '\0';
+                break; 
             }
         }
     }
 
+    // 5. PREGATIRE PROGRES JOC
+    for(int i=0; secret[i]!='\0'; i++){
+        secret[i]=toupper(secret[i]);
+    }    
 
-for(int i=0; secret[i]!='\0'; i++){
-    secret[i]=toupper(secret[i]);
-}    
-
-int len = strlen(secret);
-for (int i = 0; i < len; i++) {
-    if (secret[i] == ' ') {
-        progres[i] = ' '; 
-    } else {
-        progres[i] = '_'; 
+    int len = strlen(secret);
+    for (int i = 0; i < len; i++) {
+        if (secret[i] == ' ') {
+            progres[i] = ' '; 
+        } else {
+            progres[i] = '_'; 
+        }
     }
-}
-progres[len] = '\0';
+    progres[len] = '\0';
 
-    //7. Jocul
+    // 6. JOC
     while(mistake < TRIES && strcmp(secret, progres) != 0){
         system("cls");
 
+        // Reactivam fundalul curat o singura data
+        if (theme == 1)       printf(BG_ROZ);
+        else if (theme == 2)  printf(BG_TURCOAZ);
+        else if (theme == 3)  printf(BG_ALB);
+        else                  printf(RESET);
+
+        
+        printf(GOLD "=========================================================\n");
+        if (limba == 1) printf("                  JOCUL SPANZURATOAREA                   \n");
+        else            printf("                     HANGMAN GAME                        \n");
+        printf("=========================================================\n");
+
         printf(RED);
         draw(TRIES - mistake);
-        printf(RESET);
+        
+        
+        if (theme == 1)       printf(BG_ROZ);
+        else if (theme == 2)  printf(BG_TURCOAZ);
+        else if (theme == 3)  printf(BG_ALB);
+        else                  printf(RESET);
 
-        printf("Cuvant: " PURPLE  "%s" RESET "\n", progres);
+        printf(GOLD "---------------------------------------------------------\n");
+        
+        // Afisam cuvantul cu spatii mari ca sa arate aerisit
+        printf("  CUVANT:          " PURPLE);
+        for(int i = 0; i < len; i++) {
+            printf("%c ", progres[i]); 
+        }
+        
+        if (theme == 1)       printf(BG_ROZ);
+        else if (theme == 2)  printf(BG_TURCOAZ);
+        else if (theme == 3)  printf(BG_ALB);
+        else                  printf(RESET);
+        printf("\n\n");
 
-        printf("Vieti: ");
+        printf("  VIETI RAMASE:    ");
         for(int i = 0; i < (TRIES - mistake); i++){
-            printf(RED " <3 " RESET);
-        } printf("\n");
+            printf(RED "<3 " RESET);
+            if (theme == 1)       printf(BG_ROZ);
+            else if (theme == 2)  printf(BG_TURCOAZ);
+            else if (theme == 3)  printf(BG_ALB);
+        }
+        for(int i = 0; i < mistake; i++){
+            printf("X  ");
+        }
+        printf("\n");
 
-        printf("Litere incercate: " YELLOW);
+        printf("  LITERE INCERCATE: " YELLOW);
         for(int i = 0; i < strlen(rep); i++){
             printf("%c ", rep[i]);
-        } printf(RESET "\n\n");
+        }
         
-
-        printf("Introdu o litera: "); 
+        if (theme == 1)       printf(BG_ROZ);
+        else if (theme == 2)  printf(BG_TURCOAZ);
+        else if (theme == 3)  printf(BG_ALB);
+        else                  printf(RESET);
+        printf("\n");
+        printf(GOLD "---------------------------------------------------------\n\n");
+        
+        printf("  >> Introdu o litera: "); 
         scanf(" %c", &letter);
         letter=toupper(letter);
         
         if(!isalpha(letter)){
-            printf(RED"\n---EROARE: '%c' nu este o litera! Incearca din nou.---\n" RESET, letter);
+            printf(RED"\n  --- EROARE: '%c' nu este o litera! Incearca din nou. ---\n" RESET, letter);
+            if (theme == 1)       printf(BG_ROZ);
+            else if (theme == 2)  printf(BG_TURCOAZ);
+            else if (theme == 3)  printf(BG_ALB);
+            printf("  Apasa ENTER pentru a continua...");
+            while(getchar() != '\n');
+            getchar();
             continue;
         }
 
@@ -200,7 +321,13 @@ progres[len] = '\0';
         }
 
         if(used){
-            printf("\n---Ai mai incercat litera '%c'! Incearca alta. ---\n", letter);
+            printf(RED"\n  --- Ai mai incercat litera '%c'! Incearca alta. ---\n" RESET, letter);
+            if (theme == 1)       printf(BG_ROZ);
+            else if (theme == 2)  printf(BG_TURCOAZ);
+            else if (theme == 3)  printf(BG_ALB);
+            printf("  Apasa ENTER pentru a continua...");
+            while(getchar() != '\n');
+            getchar();
             continue;
         }
 
@@ -208,38 +335,57 @@ progres[len] = '\0';
         rep[n]=letter;
         rep[n+1]='\0';
 
-
         if (check(letter, secret, progres) == 0) {
             mistake++;
-            draw(TRIES-mistake);
-            printf("Gresit!\n");
-        } else {
-            printf("Corect!\n");
         }
     }
 
+    // 7. ECRAN FINAL 
+    system("cls");
+    if (theme == 1)       printf(BG_ROZ);
+    else if (theme == 2)  printf(BG_TURCOAZ);
+    else if (theme == 3)  printf(BG_ALB);
+    else                  printf(RESET);
     system("cls");
 
     if (strcmp(secret, progres)==0) {
-        printf(GREEN "===============================\n");
-        printf("    FELICITARII! AI CASTIGAT!\n");
-        printf(GREEN"===============================\n" RESET);
+        printf(GREEN "=========================================================\n");
+        printf("                FELICITARII! AI CASTIGAT!                \n");
+        printf("=========================================================\n");
 
         printf(YELLOW); 
         draw(TRIES - mistake); 
-        printf(RESET);
+        
+        if (theme == 1)       printf(BG_ROZ);
+        else if (theme == 2)  printf(BG_TURCOAZ);
+        else if (theme == 3)  printf(BG_ALB);
+        else                  printf(RESET);
 
-        printf("\nAi ghicit: " PURPLE "%s" RESET "\n", secret);
+        printf("\n  Ai ghicit: " PURPLE "%s" RESET "\n", secret);
     } else {
-        printf(RED "===============================\n");
-        printf("    GAME OVER! Te-a prins!\n");
-        printf(RED "===============================\n" RESET);
-        printf("\nCuvantul era: " PURPLE "%s" RESET "\n", secret);
+        printf(RED "=========================================================\n");
+        printf("                 GAME OVER! TE-A PRINS!                  \n");
+        printf("=========================================================\n");
+        
+        printf(RED);
+        draw(0);
+
+        if (theme == 1)       printf(BG_ROZ);
+        else if (theme == 2)  printf(BG_TURCOAZ);
+        else if (theme == 3)  printf(BG_ALB);
+        else                  printf(RESET);
+
+        printf("\n  Cuvantul era: " PURPLE "%s" RESET "\n", secret);
+    }
+
+    if (theme == 1)       printf(BG_ROZ);
+    else if (theme == 2)  printf(BG_TURCOAZ);
+    else if (theme == 3)  printf(BG_ALB);
+    printf("\n  Apasa ENTER pentru a continua...");
+    while (getchar() != '\n');
+    getchar();
+    
+   
+    printf(RESET);
+    system("cls");
 }
-
-printf("\nApasa ENTER pentru a continua...");
-while (getchar() != '\n');
-getchar();
-
-}
-
